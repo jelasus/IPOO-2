@@ -13,56 +13,36 @@ int potencia(int n, int e)
     return p;
 }
 
-void notacion_cientifica(char *s)
+double  notacion_cientifica(char *s)
 {
-    int punto, i=0,j, fin=-1, esta=0,out=1,tot;
-    float num,numero,decimal=1;
-    while (s[i] != '\0')
+    int i, e=0, neg=0,fin,punto;
+    double numero=0, decimal=0;
+    for (i=0;*s!='\0';*s++)
     {
-        if (s[i] == '.')
+        if (*s >= '0' && *s <= '9' && e==0)
         {
+            numero=numero*10+(*s-'0');
             punto=i;
-            ++esta;
         }
-        if (s[i] == 'e')
-        {
-            fin=i;
-            if (s[i+1]=='-')
-                out=0;
-        }
+        if (*s >= '0' && *s <= '9' && e==1)
+            decimal=decimal*10+(*s-'0');
+        if (*s == 'e')
+            e=1;
+            fin=i-1;
+        if (*s == '-')
+            neg=1;
         ++i;
     }
-    tot=i;
-    if (fin==-1)
-        fin=i;
-    for (j=0, i=0;j<(fin-esta);j++)
-    {
-        if (s[j] == '.')
-            ++i;
-        numero=numero+((s[i]-'0')*potencia(10,fin-j-esta-1));
-        ++i;
-    }
-    if (punto!=fin)
-        num=numero/potencia(10,(fin-punto-1));
-    if (s[fin+1]=='-')
-        j=fin+2;
+    if (fin!=punto)
+        numero=numero/potencia(10,fin-punto);
+    if (neg==1)
+        numero=numero/potencia(10,decimal);
     else
-        j=fin+1;
-    if (fin!=tot)
-        decimal=0;
-        for (; j<tot; ++j)
-            decimal=decimal+(potencia(10,tot-j-1)*(s[j]-'0'));
-        decimal=potencia(10,decimal);
-    if (out==0)
-        num=num/decimal;
-    else
-        num=num*decimal;
-
-    printf("%f", num);
+        numero=numero*potencia(10,decimal);
+    return numero;
 }
 
 main()
 {
-    notacion_cientifica("123.54e-5");
+    printf("%.10f",notacion_cientifica("123.54e-5"));
 }
-
