@@ -12,5 +12,5 @@ main()
     c=getchar();
     d=&c;
     converter(d);
-    printf("%s",d);
+    printf("%s",c);
 }
